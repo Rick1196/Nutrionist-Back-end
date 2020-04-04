@@ -4,16 +4,16 @@ import config from "../../config/config";
 
 export const checkJwt = (req: Request, res: Response, next: NextFunction) => {
     //Get the jwt token from the head
-    const token = <string>req.headers["auth"];
+    const token = req.headers.authorization
     let jwtPayload;
 
     //Try to validate the token and get data
     try {
-        jwtPayload = <any>jwt.verify(token, config.jwtSecret);
+        jwtPayload = <any>jwt.verify(token.split(' ')[1], config.jwtSecret);
         res.locals.jwtPayload = jwtPayload;
     } catch (error) {
         //If token is not valid, respond with 401 (unauthorized)
-        res.status(401).send();
+        res.status(401).json(`token ${token}`).send();
         return;
     }
 

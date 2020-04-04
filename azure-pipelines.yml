@@ -4,7 +4,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 variables:
-  APP_ID: express-mongoose-template
+  APP_ID: express-mongoose-nutrionist
   PORT: 3000
   LOG_LEVEL: debug
   REQUEST_LIMIT: 100kb

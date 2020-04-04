@@ -11,7 +11,9 @@
     "test": "cross-env NODE_ENV=test mocha test/**/*.ts --exit",
     "test:debug": "cross-env NODE_ENV=test mocha --inspect-brk test/**/*.ts --exit",
     "test:junit": "cross-env NODE_ENV=test mocha test/**/*.ts --reporter mocha-junit-reporter --reporter-options mochaFile=./test/test-results.xml --exit",
-    "lint": "tsc --noUnusedLocals --noEmit && prettier -c \"{server,test}/**/*.{ts,tsx}\" --write"
+    "lint": "tsc --noUnusedLocals --noEmit && prettier -c \"{server,test}/**/*.{ts,tsx}\" --write",
+    "gcp-build": "tsc -p .",
+    "deploy": "gcloud app deploy"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -25,7 +27,8 @@
     "mongoose": "^5.9.6",
     "mongoose-sequence": "^5.2.2",
     "morgan": "^1.10.0",
-    "pino": "^6.0.0"
+    "pino": "^6.0.0",
+    "cross-env": "^7.0.2"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.30",

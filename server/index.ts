@@ -9,9 +9,9 @@ const connectionString =
     ? process.env.MONGODB_URI
     : process.env.NODE_ENV === "test"
     ? process.env.MONGODB_URI_TEST ||
-      "mongodb://localhost:27017/express-mongoose-template"
+      "mongodb+srv://dbAdmin:PEPEPECASPICAPAPAS@cluster0-zzuli.gcp.mongodb.net/test?retryWrites=true&w=majority"
     : process.env.MONGODB_URI_DEV ||
-      "mongodb://localhost:27017/express-mongoose-template-test";
+      "mongodb+srv://dbAdmin:PEPEPECASPICAPAPAS@cluster0-zzuli.gcp.mongodb.net/test?retryWrites=true&w=majority";
 
 const db = new Database(connectionString);
 export default new Server()

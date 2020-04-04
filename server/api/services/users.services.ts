@@ -21,6 +21,14 @@ export class UsersService {
         return user;
     }
 
+    async getByUsername(username: string): Promise<IUserModel> {
+        l.info(`fetch user with username ${username}`);
+        const user = (await User.findOne(
+            { user_name: username }
+        ).lean()) as IUserModel;
+        return user;
+    }
+
     async create(data: IUserModel): Promise<IUserModel> {
         l.info(`create user with data ${data.user_name}`);
         const user = new User(data);
@@ -33,7 +41,7 @@ export class UsersService {
         return  bcrypt.hashSync(password, 8);
     }
     
-    private checkIfUnencryptedPasswordIsValid(unencryptedPassword: string, savedPassword:string) {
+    public checkIfUnencryptedPasswordIsValid(unencryptedPassword: string, savedPassword:string) {
         return bcrypt.compareSync(unencryptedPassword, savedPassword);
     }
 }
