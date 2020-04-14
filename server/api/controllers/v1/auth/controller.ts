@@ -21,12 +21,15 @@ export class Controller {
         }
 
         const token = jwt.sign(
-            { userId: user.user_id, username: user.user_name, userRole:user.role },
+            { userId: user.user_id, username: user.user_name, userRole: user.role },
             config.jwtSecret,
             { expiresIn: "5h" }
         )
-
-        res.status(200).json(token);
+        res.status(200).cookie("SESSIONID", token, { httpOnly: true, secure: true }).json({
+            token:token,
+            expiresIn:'18000',
+            user:user_name
+        });
 
     }
 }

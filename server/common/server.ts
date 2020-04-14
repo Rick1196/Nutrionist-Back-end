@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import { Application } from "express";
 import path from "path";
 import http from "http";
@@ -27,6 +28,7 @@ export default class ExpressServer {
     app.use(cookieParser(process.env.SESSION_SECRET));
     app.use(bodyParser.json());
     app.use(express.static(`${root}/public`));
+    app.use(cors);
   }
 
   router(routes: (app: Application) => void): ExpressServer {
