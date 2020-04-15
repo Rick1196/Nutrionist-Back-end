@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import sequence from "mongoose-sequence";
+import {Hash} from "fast-sha256";
 const AutoIncrement = sequence(mongoose);
 
 export interface IUserModel extends mongoose.Document {
@@ -11,7 +12,7 @@ export interface IUserModel extends mongoose.Document {
     country: string;
     state: string;
     citie: string;
-    email: string;
+    email?: string;
     gender: string;
     birth_date: Date;
     register_date: Date;
@@ -20,6 +21,8 @@ export interface IUserModel extends mongoose.Document {
     status: string;
     password: string;
     user_name: string;
+    confirmed: boolean;
+    cofirmation_code: string;
 }
 
 
@@ -33,7 +36,7 @@ const schema = new mongoose.Schema(
         country: { type: String },
         state: { type: String },
         citie: { type: String },
-        email: { type: String },
+        email: { type: String, required:false },
         gender: { type: String },
         birth_date: { type: Date },
         register_date: { type: Date },
@@ -41,7 +44,9 @@ const schema = new mongoose.Schema(
         role: { type: String },
         status: { type: String },
         password: { type: String, required: true },
-        user_name: { type: String, unique: true, required: true }
+        user_name: { type: String, unique: true, required: true },
+        confirmed: {type: Boolean, required:true, default: false},
+        confirmation_code:{type:Boolean, required:false, default: Math.random().toString(36).substring(2, 4) + Math.random().toString(36).substring(2, 4).toUpperCase()}
     },
     {
         collection: "users"
