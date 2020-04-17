@@ -4,8 +4,8 @@ const AutoIncrement = sequence(mongoose);
 
 export interface INutritionist extends mongoose.Document {
     nutrionist_id: number;
-    card_id:number;
-    image:ImageBitmap;
+    card_id?:number;
+    image?:ImageBitmap;
     pacients:string[];
     user:string;
 }
@@ -14,8 +14,8 @@ export interface INutritionist extends mongoose.Document {
 const schema = new mongoose.Schema(
     {
         nutrionist_id: { type: Number, unique: true },
-        card_id: { type: String, },
-        image: { type:  ImageBitmap},
+        card_id: { type: String, required:false},
+        image: { type:  Buffer, required:false},
         pacients: [{ type: mongoose.Schema.Types.ObjectId, ref:'users' }],
         user: {type: mongoose.Schema.Types.ObjectId, ref:'users', unique:true}
     },

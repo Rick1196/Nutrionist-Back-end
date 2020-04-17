@@ -8,7 +8,6 @@ export interface IUserModel extends mongoose.Document {
     first_name: string;
     last_name: string;
     phone: number;
-    zp: string;
     country: string;
     state: string;
     citie: string;
@@ -32,15 +31,14 @@ const schema = new mongoose.Schema(
         first_name: { type: String, },
         last_name: { type: String },
         phone: { type: String },
-        zp: { type: String },
         country: { type: String },
         state: { type: String },
         citie: { type: String },
         email: { type: String, required:false },
         gender: { type: String },
         birth_date: { type: Date },
-        register_date: { type: Date },
-        last_login: { type: Date },
+        register_date: { type: Date, default: Date.now() },
+        last_login: { type: Date, required:false },
         role: { type: String },
         status: { type: String },
         password: { type: String, required: true },
