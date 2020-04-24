@@ -14,6 +14,7 @@ class Database {
         mongoose_1.default.Promise = bluebird_1.default;
         mongoose_1.default
             .connect(this.connectionString, {
+            useUnifiedTopology: true,
             useNewUrlParser: true,
             useCreateIndex: true,
             useFindAndModify: false,

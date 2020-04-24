@@ -17,6 +17,7 @@ export default class Database implements IDatabase {
     mongoose.Promise = bluebird;
     mongoose
       .connect(this.connectionString, {
+        useUnifiedTopology: true,
         useNewUrlParser: true,
         useCreateIndex: true,
         useFindAndModify: false,

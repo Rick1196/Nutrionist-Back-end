@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors"));
 const path_1 = __importDefault(require("path"));
 const http_1 = __importDefault(require("http"));
 const os_1 = __importDefault(require("os"));
@@ -26,6 +27,7 @@ class ExpressServer {
         app.use(cookie_parser_1.default(process.env.SESSION_SECRET));
         app.use(body_parser_1.default.json());
         app.use(express_1.default.static(`${root}/public`));
+        app.use(cors_1.default);
     }
     router(routes) {
         openapi_1.default(app, routes);
