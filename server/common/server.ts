@@ -18,17 +18,17 @@ export default class ExpressServer {
     const root = path.normalize(__dirname + "/../..");
     app.set("appPath", root + "client");
     app.use(morgan("dev"));
-    app.use(express.json({ limit: process.env.REQUEST_LIMIT || "100kb" }));
+    app.use(express.json({ limit: process.env.REQUEST_LIMIT || "10000kb" }));
     app.use(
       express.urlencoded({
         extended: true,
-        limit: process.env.REQUEST_LIMIT || "100kb"
+        limit: process.env.REQUEST_LIMIT || "10000kb"
       })
     );
     app.use(cookieParser(process.env.SESSION_SECRET));
     app.use(bodyParser.json());
     app.use(express.static(`${root}/public`));
-    app.use(cors);
+    app.use(cors());
   }
 
   router(routes: (app: Application) => void): ExpressServer {
@@ -45,7 +45,7 @@ export default class ExpressServer {
     const welcome = port => () =>
       l.info(
         `up and running in ${process.env.NODE_ENV ||
-          "development"} @: ${os.hostname()} on port: ${port}`
+        "development"} @: ${os.hostname()} on port: ${port}`
       );
     http.createServer(app).listen(p, welcome(p));
     return app;

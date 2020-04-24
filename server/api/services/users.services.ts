@@ -29,12 +29,25 @@ export class UsersService {
         return user;
     }
 
-    async create(data: IUserModel): Promise<IUserModel> {
+    async create(data): Promise<IUserModel> {
         l.info(`create user with data ${data.user_name}`);
         const user = new User(data);
         user.password = this.hashPassword(user.password);
         const doc = (await user.save()) as IUserModel;
         return doc;
+    }
+
+    async udpdate(data):Promise<IUserModel>{
+        l.info(`update user with id ${data._id}`);
+        let id = data._id;
+        delete data._id;
+        const doc =(await User.updateOne({_id:id}, {$set:data},{multi:true}).exec());
+        return User.findById(id);
+
+    }
+
+    public generateCode():string{
+        return Math.random().toString(36).toUpperCase().substring(2, 4).toUpperCase() + Math.random().toString(36).toUpperCase().substring(2, 4).toUpperCase();
     }
 
     private hashPassword(password:string):string {

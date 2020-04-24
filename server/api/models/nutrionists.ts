@@ -3,27 +3,27 @@ import sequence from "mongoose-sequence";
 const AutoIncrement = sequence(mongoose);
 
 export interface INutritionist extends mongoose.Document {
-    nutrionist_id: number;
+    nutritionist_id: number;
     card_id?:number;
-    image?:ImageBitmap;
-    pacients:string[];
+    image?:any;
+    pacients?:string[];
     user:string;
 }
 
 
 const schema = new mongoose.Schema(
     {
-        nutrionist_id: { type: Number, unique: true },
+        nutritionist_id: { type: Number, unique: true },
         card_id: { type: String, required:false},
         image: { type:  Buffer, required:false},
         pacients: [{ type: mongoose.Schema.Types.ObjectId, ref:'users' }],
         user: {type: mongoose.Schema.Types.ObjectId, ref:'users', unique:true}
     },
     {
-        collection: "nutrionists"
+        collection: "nutritionists"
     }
 );
 
-schema.plugin(AutoIncrement, { inc_field: "nutrionist_id" });
+schema.plugin(AutoIncrement, { inc_field: "nutritionist_id" });
 
-export const User = mongoose.model<INutritionist>("Nutrionist", schema);
+export const Nutritionist = mongoose.model<INutritionist>("Nutritionist", schema);
