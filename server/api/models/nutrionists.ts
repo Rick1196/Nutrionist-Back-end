@@ -10,7 +10,6 @@ export interface INutritionist extends mongoose.Document {
     user:string;
 }
 
-
 const schema = new mongoose.Schema(
     {
         nutritionist_id: { type: Number, unique: true },
