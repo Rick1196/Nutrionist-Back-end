@@ -4,4 +4,4 @@ export default express
   .Router()
   .post("/login", controller.login)
   .post("/register-nutritionist",controller.registerNutritionist)
-  .post("/validate-user",controller.validateUser);
+  .post("/validate-user",controller.confirmUser);

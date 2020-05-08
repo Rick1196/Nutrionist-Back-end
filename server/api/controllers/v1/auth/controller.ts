@@ -6,7 +6,7 @@ import nutritionistService from "../../../services/nutritionist.service";
 import l from "../../../../common/logger";
 import * as jwt from "jsonwebtoken";
 import config from '../../../../config/config';
-import { IUserModel } from "../../../models/users";
+import { IUserModel, User } from "../../../models/users";
 export class Controller {
     async registerNutritionist(req: Request, res: Response, next: NextFunction) {
         let {
@@ -17,7 +17,10 @@ export class Controller {
             first_name: first_name, last_name: last_name, birth_date:birth_date, gender:gender, email:email, phone:phone, countrie:countrie, state:state, citie:citie, direction:direction,
             user_name:user_name, password:password,role:role
         };
-
+        const errors = await usersServices.validateUser(user);
+        if(errors.length != 0){
+            return res.status(400).json({errors:errors});
+        }
         usersServices.create(user).then(data=>{
             const nutritionist = {
                 card_id:card_id, image:Buffer.from(image,'base64'), user:data._id
@@ -32,10 +35,10 @@ export class Controller {
         })        
     }
 
-    async validateUser(req:Request, res:Response, next:NextFunction){
+    async confirmUser(req:Request, res:Response, next:NextFunction){
         let {user_name,confirmation_code} = req.body
         let user = await usersServices.getByUsername(user_name);
-        l.info(user.confirmation_code + ' ' + confirmation_code)
+        l.info(user.confirmation_code + ' ' + confirmation_code);
         if(user.confirmation_code == confirmation_code){
             user.confirmed = true;
             user.status = 'confirmed';
@@ -57,6 +60,7 @@ export class Controller {
 
 
 
+
     async login(req: Request, res: Response, next: NextFunction) {
         let { user_name, password } = req.body;
         if (!(user_name && password)) {
@@ -65,11 +69,14 @@ export class Controller {
 
         const user = await usersServices.getByUsername(user_name);
         if (!user) {
-            return res.status(401).json({ error: 'User not found' });
+            return res.status(401).json({ error: 'Usuario no encontrado' });
+        }
+        if(user.confirmed == false){
+            return res.status(400).json({error:'Debe verificar su usuario'});
         }
 
         if (!usersServices.checkIfUnencryptedPasswordIsValid(password, user.password)) {
-            return res.status(401).json({ error: 'Wrong password' });
+            return res.status(401).json({ error: 'Password incorrecta' });
         }
 
         const token = jwt.sign(
@@ -77,7 +84,7 @@ export class Controller {
             config.jwtSecret,
             { expiresIn: "5h" }
         )
-        res.status(200).cookie("SESSIONID", token, { httpOnly: true, secure: true }).json({
+        res.status(200).json({
             token: token,
             expiresIn: '18000',
             user: user_name

@@ -37,6 +37,19 @@ export class UsersService {
         return doc;
     }
 
+    async validateUser(data){
+        let errors = [];
+        let byUser = await User.find({user_name:data.user_name});
+        if(byUser != null){
+            errors.push({user_name:'User already taked'});
+        }
+        let byPhone = await User.find({phone:data.phone});
+        if(byPhone != null){
+            errors.push({phone:'Phone already registered'});
+        }
+        return errors;
+    }
+
     async udpdate(data):Promise<IUserModel>{
         l.info(`update user with id ${data._id}`);
         let id = data._id;
