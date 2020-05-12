@@ -10,7 +10,7 @@ import { IUserModel, User } from "../../../models/users";
 export class Controller {
     async registerNutritionist(req: Request, res: Response, next: NextFunction) {
         let {
-            first_name, last_name, birth_date, gender, email, phone, countrie, state, citie, direction, card_id,
+            first_name, last_name, birth_date, gender, email, phone, countrie, state, citie, direction,
             image, user_name, password,role
         } = req.body;
         const user = {
@@ -23,7 +23,7 @@ export class Controller {
         }
         usersServices.create(user).then(data=>{
             const nutritionist = {
-                card_id:card_id, image:Buffer.from(image,'base64'), user:data._id
+                image:Buffer.from(image,'base64'), user:data._id
             };
             nutritionistService.create(nutritionist).then(nut=>{
                 return res.status(200).json(nut)
@@ -82,12 +82,13 @@ export class Controller {
         const token = jwt.sign(
             { userId: user.user_id, username: user.user_name, userRole: user.role },
             config.jwtSecret,
-            { expiresIn: "5h" }
+            { expiresIn: "1y" }
         )
         res.status(200).json({
             token: token,
             expiresIn: '18000',
-            user: user_name
+            user: user_name,
+            email: user.email,
         });
 
     }
