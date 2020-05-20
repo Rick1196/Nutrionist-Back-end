@@ -54,6 +54,34 @@ class UsersService {
             return doc;
         });
     }
+    validateUser(data) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let errors = { user_name: '', phone: '', length: 0 };
+            let byUser = yield users_1.User.findOne({ user_name: data.user_name });
+            if (byUser != null) {
+                errors.user_name = 'User already taked';
+                errors.length = errors.length + Number.parseInt('1');
+            }
+            let byPhone = yield users_1.User.findOne({ phone: data.phone });
+            if (byPhone != null) {
+                errors.phone = 'Phone already registered';
+                errors.length = errors.length + Number.parseInt('1');
+            }
+            return errors;
+        });
+    }
+    udpdate(data) {
+        return __awaiter(this, void 0, void 0, function* () {
+            logger_1.default.info(`update user with id ${data._id}`);
+            let id = data._id;
+            delete data._id;
+            const doc = (yield users_1.User.updateOne({ _id: id }, { $set: data }, { multi: true }).exec());
+            return users_1.User.findById(id);
+        });
+    }
+    generateCode() {
+        return Math.random().toString(36).toUpperCase().substring(2, 4).toUpperCase() + Math.random().toString(36).toUpperCase().substring(2, 4).toUpperCase();
+    }
     hashPassword(password) {
         return bcrypt.hashSync(password, 8);
     }

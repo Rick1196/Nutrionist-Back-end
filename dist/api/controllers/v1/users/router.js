@@ -10,5 +10,6 @@ exports.default = express_1.default
     .Router()
     .post("/", controller_1.default.create)
     .get("/:id", controller_1.default.getById)
-    .get("/", [checkJwt_1.checkJwt], controller_1.default.getAll);
+    .get("/get-nutritionist-profile/:user_name", [checkJwt_1.checkJwt], controller_1.default.getNutritionistProfile)
+    .get("/is-verified/:user_name", controller_1.default.isVerified);
 //# sourceMappingURL=router.js.map

@@ -18,6 +18,13 @@ export class NutrionistService {
         return Nutritionist.findById(id);
 
     }
+
+    async getByUserId(data): Promise<INutritionist>{
+        l.info(`retrive Nutrititionist with user ${data.user_name}`);
+        let _id = data._id;
+        const doc = (await Nutritionist.findOne({user:_id})) as INutritionist;
+        return doc;
+    }
 }
 
 export default new NutrionistService();

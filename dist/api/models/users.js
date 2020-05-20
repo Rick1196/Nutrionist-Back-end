@@ -11,20 +11,21 @@ const schema = new mongoose_1.default.Schema({
     first_name: { type: String, },
     last_name: { type: String },
     phone: { type: String },
-    country: { type: String },
+    countrie: { type: String },
     state: { type: String },
     citie: { type: String },
+    direction: { type: String },
     email: { type: String, required: false },
     gender: { type: String },
     birth_date: { type: Date },
     register_date: { type: Date, default: Date.now() },
     last_login: { type: Date, required: false },
     role: { type: String },
-    status: { type: String },
+    status: { type: String, default: 'pending' },
     password: { type: String, required: true },
     user_name: { type: String, unique: true, required: true },
     confirmed: { type: Boolean, required: true, default: false },
-    confirmation_code: { type: Boolean, required: false, default: Math.random().toString(36).substring(2, 4) + Math.random().toString(36).substring(2, 4).toUpperCase() }
+    confirmation_code: { type: String, required: false, default: Math.random().toString(36).substring(2, 4) + Math.random().toString(36).substring(2, 4).toUpperCase() }
 }, {
     collection: "users"
 });

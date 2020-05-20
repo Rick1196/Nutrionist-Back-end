@@ -4,19 +4,21 @@ const AutoIncrement = sequence(mongoose);
 
 export interface INutritionist extends mongoose.Document {
     nutritionist_id: number;
-    card_id?:number;
-    image?:any;
-    pacients?:string[];
-    user:string;
+    card_id?: number;
+    image?: any;
+    data_type?: string;
+    pacients?: string[];
+    user: string;
 }
 
 const schema = new mongoose.Schema(
     {
         nutritionist_id: { type: Number, unique: true },
-        card_id: { type: String, required:false},
-        image: { type:  Buffer, required:false},
-        pacients: [{ type: mongoose.Schema.Types.ObjectId, ref:'users' }],
-        user: {type: mongoose.Schema.Types.ObjectId, ref:'users', unique:true}
+        card_id: { type: String, required: false },
+        image: { type: Buffer, required: false },
+        data_type: { type: String, required: false },
+        pacients: [{ type: mongoose.Schema.Types.ObjectId, ref: 'users' }],
+        user: { type: mongoose.Schema.Types.ObjectId, ref: 'users', unique: true }
     },
     {
         collection: "nutritionists"

@@ -38,14 +38,17 @@ export class UsersService {
     }
 
     async validateUser(data){
-        let errors = [];
-        let byUser = await User.find({user_name:data.user_name});
+        let errors = {user_name:'',phone:'',length:0};
+        let byUser = await User.findOne({user_name:data.user_name});
         if(byUser != null){
-            errors.push({user_name:'User already taked'});
+            errors.user_name = 'User already taked';
+            errors.length = errors.length+ Number.parseInt('1');
         }
-        let byPhone = await User.find({phone:data.phone});
+        let byPhone = await User.findOne({phone:data.phone});
         if(byPhone != null){
-            errors.push({phone:'Phone already registered'});
+            errors.phone='Phone already registered';
+            errors.length = errors.length+ Number.parseInt('1');
+
         }
         return errors;
     }

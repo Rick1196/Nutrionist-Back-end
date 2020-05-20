@@ -11,19 +11,21 @@ export class Controller {
     async registerNutritionist(req: Request, res: Response, next: NextFunction) {
         let {
             first_name, last_name, birth_date, gender, email, phone, countrie, state, citie, direction,
-            image, user_name, password,role
+            image, user_name, password,role, data_type
         } = req.body;
         const user = {
             first_name: first_name, last_name: last_name, birth_date:birth_date, gender:gender, email:email, phone:phone, countrie:countrie, state:state, citie:citie, direction:direction,
             user_name:user_name, password:password,role:role
         };
+        user.first_name = first_name.toString().toUpperCase();
+        user.last_name = last_name.toString().toUpperCase();
         const errors = await usersServices.validateUser(user);
         if(errors.length != 0){
             return res.status(400).json({errors:errors});
         }
         usersServices.create(user).then(data=>{
             const nutritionist = {
-                image:Buffer.from(image,'base64'), user:data._id
+                image:Buffer.from(image,'base64'), user:data._id,data_type:data_type
             };
             nutritionistService.create(nutritionist).then(nut=>{
                 return res.status(200).json(nut)
@@ -42,24 +44,21 @@ export class Controller {
         if(user.confirmation_code == confirmation_code){
             user.confirmed = true;
             user.status = 'confirmed';
+            user.confirmation_code = usersServices.generateCode();
             usersServices.udpdate(user).then(data=>{
                 res.status(200).json(data);
             }).catch(error=>{
                 res.status(500).json(error);
             })
         }else{
-            user.confirmation_code = usersServices.generateCode();
             l.info(user.confirmation_code);
             usersServices.udpdate(user).then(done=>{
-                res.status(200).json({message:"invalid code",user:done});
+                res.status(400).json({message:"Codigo erroneo",user:done});
             }).catch(error=>{
                 res.status(500).json(error);
             })
         }
     }
-
-
-
 
     async login(req: Request, res: Response, next: NextFunction) {
         let { user_name, password } = req.body;

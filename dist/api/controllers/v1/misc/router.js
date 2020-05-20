@@ -7,7 +7,5 @@ const express_1 = __importDefault(require("express"));
 const controller_1 = __importDefault(require("./controller"));
 exports.default = express_1.default
     .Router()
-    .post("/login", controller_1.default.login)
-    .post("/register-nutritionist", controller_1.default.registerNutritionist)
-    .post("/validate-user", controller_1.default.confirmUser);
+    .get("/get-countries", controller_1.default.getCountries);
 //# sourceMappingURL=router.js.map

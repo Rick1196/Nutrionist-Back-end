@@ -19,15 +19,15 @@ class ExpressServer {
         const root = path_1.default.normalize(__dirname + "/../..");
         app.set("appPath", root + "client");
         app.use(morgan_1.default("dev"));
-        app.use(express_1.default.json({ limit: process.env.REQUEST_LIMIT || "100kb" }));
+        app.use(express_1.default.json({ limit: process.env.REQUEST_LIMIT || "10000kb" }));
         app.use(express_1.default.urlencoded({
             extended: true,
-            limit: process.env.REQUEST_LIMIT || "100kb"
+            limit: process.env.REQUEST_LIMIT || "10000kb"
         }));
         app.use(cookie_parser_1.default(process.env.SESSION_SECRET));
         app.use(body_parser_1.default.json());
         app.use(express_1.default.static(`${root}/public`));
-        app.use(cors_1.default);
+        app.use(cors_1.default());
     }
     router(routes) {
         openapi_1.default(app, routes);

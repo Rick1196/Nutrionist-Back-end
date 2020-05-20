@@ -5,4 +5,5 @@ export default express
   .Router()
   .post("/", controller.create)
   .get("/:id", controller.getById)
-  .get("/",[checkJwt] ,controller.getAll);
+  .get("/get-nutritionist-profile/:user_name",[checkJwt] ,controller.getNutritionistProfile)
+  .get("/is-verified/:user_name",controller.isVerified);
