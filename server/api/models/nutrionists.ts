@@ -7,7 +7,7 @@ export interface INutritionist extends mongoose.Document {
     card_id?: number;
     image?: any;
     data_type?: string;
-    pacients?: string[];
+    patients?: string[];
     user: string;
 }
 
@@ -17,7 +17,7 @@ const schema = new mongoose.Schema(
         card_id: { type: String, required: false },
         image: { type: Buffer, required: false },
         data_type: { type: String, required: false },
-        pacients: [{ type: mongoose.Schema.Types.ObjectId, ref: 'users' }],
+        patients: [{ type: mongoose.Schema.Types.ObjectId, ref: 'users' }],
         user: { type: mongoose.Schema.Types.ObjectId, ref: 'users', unique: true }
     },
     {
@@ -27,4 +27,4 @@ const schema = new mongoose.Schema(
 
 schema.plugin(AutoIncrement, { inc_field: "nutritionist_id" });
 
-export const Nutritionist = mongoose.model<INutritionist>("Nutritionist", schema);
+export const Nutritionist = mongoose.model<INutritionist>("nutritionists", schema);

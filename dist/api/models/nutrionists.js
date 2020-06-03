@@ -11,7 +11,7 @@ const schema = new mongoose_1.default.Schema({
     card_id: { type: String, required: false },
     image: { type: Buffer, required: false },
     data_type: { type: String, required: false },
-    pacients: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: 'users' }],
+    patients: [{ type: mongoose_1.default.Schema.Types.ObjectId, ref: 'users' }],
     user: { type: mongoose_1.default.Schema.Types.ObjectId, ref: 'users', unique: true }
 }, {
     collection: "nutritionists"

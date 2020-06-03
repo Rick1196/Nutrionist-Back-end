@@ -11,5 +11,8 @@ exports.default = express_1.default
     .post("/", controller_1.default.create)
     .get("/:id", controller_1.default.getById)
     .get("/get-nutritionist-profile/:user_name", [checkJwt_1.checkJwt], controller_1.default.getNutritionistProfile)
+    .post("/update-nutritionist-profile", [checkJwt_1.checkJwt], controller_1.default.updateNutritionistProfile)
+    .post("/register-patient", [checkJwt_1.checkJwt], controller_1.default.registerPatient)
+    .post("/generate-user", [checkJwt_1.checkJwt], controller_1.default.generateUsername)
     .get("/is-verified/:user_name", controller_1.default.isVerified);
 //# sourceMappingURL=router.js.map

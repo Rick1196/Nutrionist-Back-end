@@ -6,4 +6,7 @@ export default express
   .post("/", controller.create)
   .get("/:id", controller.getById)
   .get("/get-nutritionist-profile/:user_name",[checkJwt] ,controller.getNutritionistProfile)
+  .post("/update-nutritionist-profile",[checkJwt],controller.updateNutritionistProfile)
+  .post("/register-patient",[checkJwt],controller.registerPatient)
+  .post("/generate-user",[checkJwt],controller.generateUsername)
   .get("/is-verified/:user_name",controller.isVerified);

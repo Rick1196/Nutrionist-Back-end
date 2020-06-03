@@ -10,7 +10,7 @@ import l from "./logger";
 import morgan from "morgan";
 import { IDatabase } from "./database";
 import bodyParser from "body-parser";
-
+import  nodemailer from 'nodemailer'
 const app = express();
 
 export default class ExpressServer {
@@ -18,11 +18,11 @@ export default class ExpressServer {
     const root = path.normalize(__dirname + "/../..");
     app.set("appPath", root + "client");
     app.use(morgan("dev"));
-    app.use(express.json({ limit: process.env.REQUEST_LIMIT || "10000kb" }));
+    app.use(express.json({ limit: "20mb" }));
     app.use(
       express.urlencoded({
         extended: true,
-        limit: process.env.REQUEST_LIMIT || "10000kb"
+        limit:"20mb"
       })
     );
     app.use(cookieParser(process.env.SESSION_SECRET));

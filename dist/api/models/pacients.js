@@ -9,9 +9,9 @@ const AutoIncrement = mongoose_sequence_1.default(mongoose_1.default);
 const schema = new mongoose_1.default.Schema({
     pacient_id: { type: Number, unique: true },
     marital_status: { type: String },
-    ocupation: { type: String },
-    nutrionist: { type: mongoose_1.default.Schema.Types.ObjectId, ref: 'nutrionists', unique: true },
-    user: { type: mongoose_1.default.Schema.Types.ObjectId, ref: 'users', unique: true }
+    ocupation: { type: String, required: false },
+    user: { type: mongoose_1.default.Schema.Types.ObjectId, ref: 'users', unique: true },
+    mesures: [{ type: Object }]
 }, {
     collection: "pacients"
 });

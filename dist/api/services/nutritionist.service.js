@@ -34,7 +34,7 @@ class NutrionistService {
     }
     getByUserId(data) {
         return __awaiter(this, void 0, void 0, function* () {
-            logger_1.default.info(`retrive Nutrititionist with user ${data.user_name}`);
+            logger_1.default.info(`retrive Nutrititionist with id ${data}`);
             let _id = data._id;
             const doc = (yield nutrionists_1.Nutritionist.findOne({ user: _id }));
             return doc;

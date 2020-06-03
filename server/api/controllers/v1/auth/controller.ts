@@ -2,6 +2,7 @@ import UsersService from "../../../services/users.services";
 import { Request, Response, NextFunction } from "express";
 import usersServices from "../../../services/users.services";
 import nutritionistService from "../../../services/nutritionist.service";
+import  GMailService  from "../../../services/mail.service";
 
 import l from "../../../../common/logger";
 import * as jwt from "jsonwebtoken";
@@ -28,6 +29,7 @@ export class Controller {
                 image:Buffer.from(image,'base64'), user:data._id,data_type:data_type
             };
             nutritionistService.create(nutritionist).then(nut=>{
+                GMailService.sendMail(data.email,'Verificar cuenta de nutriologo',`<strong>Codigo de verificacion:</strong>${data.confirmation_code}`)
                 return res.status(200).json(nut)
             }).catch(error=>{
                 return res.status(500).json(error);

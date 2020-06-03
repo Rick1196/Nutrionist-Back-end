@@ -55,4 +55,4 @@ const schema = new mongoose.Schema(
 
 schema.plugin(AutoIncrement, { inc_field: "user_id" });
 
-export const User = mongoose.model<IUserModel>("Nutrionist", schema);
+export const User = mongoose.model<IUserModel>("users", schema);
