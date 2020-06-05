@@ -9,7 +9,6 @@ describe("Authentication API", () => {
     let res = await request(Server).post("/api/v1/auth/login")
       .send({ username: "rick11", password: "1234" })
     expect(res.status).toEqual(400);
-    done();
   });
   //must return 401, unauthorized, wrong credentials
   it("Login API request must fail with 401", async (done) => {
