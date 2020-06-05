@@ -7,3 +7,13 @@ notifications:
     slack: devopsp-la:EhPAZGAvCJaO3KuCXLvZlMz2
 script:
   - npm run test
+after_success:
+  - npm run compile
+# deploy:
+#   - provider: codedeploy
+#     revision_type: github
+#     access_key_id: AKIAJ2IACIS3EZZMW6ZQ
+#     secret_access_key: GubM3kFh6p8UNerd9Hs79nlHkkIGt1mLyKuyVTID
+#     application: "Your Codedeploy application"
+#     deployment_group: "The Deployment group associated with the codedeploy application"
+#     region: "Region in which your ec2 instance is."
