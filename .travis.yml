@@ -4,5 +4,4 @@ language: node_js # Sets which engine use to build the project
 node_js: "node" # Specifies node version to use "node"="latest"
 services: mongodb
 notifications:
-  slack:
-    if: branch = master
+    slack: devopsp-la:EhPAZGAvCJaO3KuCXLvZlMz2
