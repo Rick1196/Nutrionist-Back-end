@@ -1,7 +1,6 @@
 import Server from "../server";
 import request from "supertest";
 import mongoose from 'mongoose';
-afterEach(() => Server.removeListener);
 
 
 describe("Authentication API", () => {
