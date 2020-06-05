@@ -1,26 +1,22 @@
 import Server from "../server";
 import request from "supertest";
+import mongoose from 'mongoose';
+afterEach(() => Server.removeListener);
 
-beforeAll(done => {
-  done()
-})
-
-afterAll(done => {
-  // Closing the DB connection allows Jest to exit successfully.
-  done()
-})
 
 describe("Authentication API", () => {
   //body request malformed
-  it("Login API request must fail with 400", async () => {
+  it("Login API request must fail with 400", async (done) => {
     let res = await request(Server).post("/api/v1/auth/login")
       .send({ username: "rick11", password: "1234" })
-    expect(res.status).toEqual(400)
-  })
+    expect(res.status).toEqual(400);
+    done();
+  });
   //must return 401, unauthorized, wrong credentials
-  it("Login API request must fail with 401", async () => {
+  it("Login API request must fail with 401", async (done) => {
     let res = await request(Server).post("/api/v1/auth/login")
       .send({ user_name: "rick11", password: "1234" })
     expect(res.status).toEqual(401);
+    done();
   })
 });

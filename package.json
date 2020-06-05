@@ -8,7 +8,7 @@
     "compile": "ts-node build.ts && tsc",
     "dev": "nodemon server/index.ts | pino-pretty",
     "dev:debug": "nodemon --exec \"node -r ts-node/register --inspect-brk\" server/index.ts | pino-pretty",
-    "test": "jest ",
+    "test": "jest  --forceExit",
     "test:debug": "cross-env NODE_ENV=test mocha --inspect-brk test/**/*.ts --exit",
     "test:junit": "cross-env NODE_ENV=test mocha test/**/*.ts --reporter mocha-junit-reporter --reporter-options mochaFile=./test/test-results.xml --exit",
     "lint": "tsc --noUnusedLocals --noEmit && prettier -c \"{server,test}/**/*.{ts,tsx}\" --write"
