@@ -1,5 +1,6 @@
 module.exports = {
   preset: 'ts-jest',
+  timers: "fake",
   testEnvironment: 'node',
   verbose: true,
   roots: ["./test"],

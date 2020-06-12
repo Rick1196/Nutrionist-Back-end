@@ -29,11 +29,14 @@ export class UsersService {
         const user = (await User.findOne(
             { user_name: username }
         ).lean()) as IUserModel;
+        if (!user) {
+            throw new CustomException({ username: "Usuario no encontrado" })
+        }
         return user;
     }
-    async getUsersByName(username:string):Promise<IUserModel[]>{
+    async getUsersByName(username: string): Promise<IUserModel[]> {
         l.info(`fetch users with username ${username}`);
-        const users = (await User.find({user_name:username}).lean()) as IUserModel[];
+        const users = (await User.find({ user_name: username }).lean()) as IUserModel[];
         return users;
     }
 
@@ -83,14 +86,16 @@ export class UsersService {
     async updateNutritionistProfile(profile: any) {
         try {
             await (User.findOneAndUpdate(profile.user._id, profile.user));
-            await (Nutritionist.findOneAndUpdate(profile.nutritionist._id, profile.nutritionist))
+            delete profile.user;
+            profile.image = Buffer.from(profile.image, 'base64');
+            await (Nutritionist.findOneAndUpdate(profile._id, profile))
         } catch (error) {
             throw Error(error);
         }
 
     }
 
-    async registerPatient(patient: any):Promise<IUserModel> {
+    async registerPatient(patient: any): Promise<IUserModel> {
         try {
             let user = await this.create(patient.user);
             let nutritionistUser = await this.getByUsername(patient.nutritionist);

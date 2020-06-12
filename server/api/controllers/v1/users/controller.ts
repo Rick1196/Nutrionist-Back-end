@@ -35,7 +35,7 @@ export class Controller {
             if(user){
                 const nutritionist = await nutritionistService.getByUserId(user._id);
                 if(nutritionist){
-                    return res.status(200).json({user:user,nutritionist:nutritionist});
+                    return res.status(200).json(nutritionist);
                 }
                 const errors = [{message:"Nutritionist not found"}];
                 return res.status(400).json(errors);

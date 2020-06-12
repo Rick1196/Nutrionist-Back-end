@@ -22,7 +22,7 @@ export class NutrionistService {
     async getByUserId(data): Promise<INutritionist>{
         l.info(`retrive Nutrititionist with id ${data}`);
         let _id = data._id;
-        const doc = (await Nutritionist.findOne({user:_id})) as INutritionist;
+        const doc = (await Nutritionist.findOne({user:_id}).populate('user'));
         return doc;
     }
 }

@@ -5,7 +5,7 @@ import CommonServices from "../../../services/common.services";
 export class Controller {
     async getCountries(req: Request, res:Response,nex:NextFunction){
         try{
-            l.info("retriving stuff");
+            l.info("retriving countries");
             let countires = await CommonServices.getCoutnries();
             return res.status(200).json(countires);
         }catch(e){

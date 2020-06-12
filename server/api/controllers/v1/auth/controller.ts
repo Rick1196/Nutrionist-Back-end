@@ -1,5 +1,5 @@
 import UsersService from "../../../services/users.services";
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction, request } from "express";
 import usersServices from "../../../services/users.services";
 import nutritionistService from "../../../services/nutritionist.service";
 import GMailService from "../../../services/mail.service";
@@ -53,39 +53,55 @@ export class Controller {
                 res.status(500).json(error);
             })
         } else {
-            res.status(400).json({ message: "Codigo erroneo"});
+            res.status(400).json({ message: "Codigo erroneo" });
         }
     }
 
+
+    async sendVerficationCode(req: Request, res: Response, next: NextFunction) {
+        try {
+            let username = req.params.username;
+            let user = await usersServices.getByUsername(username);
+            GMailService.sendMail(user.email, 'Verificar cuenta de nutriologo', `<strong>Codigo de verificacion:</strong>${user.confirmation_code}`)
+            return res.status(200).json({message:"Hemos reenviado el codigo de verificacion"});
+        }catch(err){
+            next(err);
+        }
+        
+
+    }
+
     async login(req: Request, res: Response, next: NextFunction) {
-        let { user_name, password } = req.body;
-        if (!(user_name && password)) {
-            return res.status(400).json({ error: 'Please provide user and password' })
+        try {
+            let { user_name, password } = req.body;
+            if (!(user_name && password)) {
+                return res.status(400).json({ error: 'Please provide user and password' })
+            }
+
+            const user = await usersServices.getByUsername(user_name);
+            if (user.confirmed == false) {
+                return res.status(400).json({ error: 'Debe verificar su usuario' });
+            }
+
+            if (!usersServices.checkIfUnencryptedPasswordIsValid(password, user.password)) {
+                return res.status(401).json({ error: 'Password incorrecta' });
+            }
+
+            const token = jwt.sign(
+                { userId: user.user_id, username: user.user_name, userRole: user.role },
+                config.jwtSecret,
+                { expiresIn: "1y" }
+            )
+            res.status(200).json({
+                token: token,
+                expiresIn: '18000',
+                user: user_name,
+                email: user.email,
+            });
+        } catch (err) {
+            next(err);
         }
 
-        const user = await usersServices.getByUsername(user_name);
-        if (!user) {
-            return res.status(401).json({ error: 'Usuario no encontrado' });
-        }
-        if (user.confirmed == false) {
-            return res.status(400).json({ error: 'Debe verificar su usuario' });
-        }
-
-        if (!usersServices.checkIfUnencryptedPasswordIsValid(password, user.password)) {
-            return res.status(401).json({ error: 'Password incorrecta' });
-        }
-
-        const token = jwt.sign(
-            { userId: user.user_id, username: user.user_name, userRole: user.role },
-            config.jwtSecret,
-            { expiresIn: "1y" }
-        )
-        res.status(200).json({
-            token: token,
-            expiresIn: '18000',
-            user: user_name,
-            email: user.email,
-        });
 
     }
 }
