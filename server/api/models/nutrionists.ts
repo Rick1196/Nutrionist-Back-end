@@ -17,7 +17,7 @@ const schema = new mongoose.Schema(
         card_id: { type: String, required: false },
         image: { type: Buffer, required: false },
         data_type: { type: String, required: false },
-        patients: [{ type: mongoose.Schema.Types.ObjectId, ref: 'users' }],
+        patients: [{ type: mongoose.Schema.Types.ObjectId, ref: 'patients' }],
         user: { type: mongoose.Schema.Types.ObjectId, ref: 'users', unique: true }
     },
     {

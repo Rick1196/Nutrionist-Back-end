@@ -34,6 +34,7 @@ export class UsersService {
         }
         return user;
     }
+
     async getUsersByName(username: string): Promise<IUserModel[]> {
         l.info(`fetch users with username ${username}`);
         const users = (await User.find({ user_name: username }).lean()) as IUserModel[];
