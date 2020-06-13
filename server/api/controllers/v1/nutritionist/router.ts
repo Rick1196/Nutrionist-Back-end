@@ -4,4 +4,5 @@ import { checkJwt } from '../../../middlewares/checkJwt';
 
 export default express
     .Router()
+    .get("/get-nutritionist-profile/:user_name", [checkJwt], Controller.profile)
     .get("/patients", [checkJwt], Controller.patients);
