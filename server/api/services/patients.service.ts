@@ -5,6 +5,7 @@ import { IPatient, Patient } from "../models/patients";
 import nutritionistService from "./nutritionist.service";
 import CustomException from "../exceptions/exception";
 import { NextFunction } from "express";
+import usersServices from "./users.services";
 
 
 export class PatientService {

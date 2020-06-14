@@ -3,6 +3,7 @@ import l from "../../common/logger";
 import { Nutritionist, INutritionist } from "../models/nutrionists";
 import { User } from "../models/users";
 import usersServices from "./users.services";
+import { IPatient } from "../models/patients";
 
 export class NutrionistService {
     async create(data): Promise<INutritionist> {
@@ -37,16 +38,12 @@ export class NutrionistService {
         return doc;
     }
 
-    async getMyPatients(username: string, page: number, size: number) {
-        let query: any = {
-            sort: {},
-            skip: size * (page - 1),
-            limit: size
-        };
-
+    async filter(username: string, pagination: any, usersQ: any): Promise<any[]> {
         const user = (await usersServices.getByUsername(username))._id;
-        const list = await Nutritionist.findOne({ user: user }, "patients").populate({ path: 'patients', options: query, populate: { path: 'user' } });
-        return list;
+        let users = (await User.find(usersQ));
+        users = users.map(x => x._id);
+        const list = await Nutritionist.findOne({ user: user }, "patients").populate({ path: 'patients', options: pagination, match: { user: { $in: users } }, populate: { path: 'user' } });
+        return list.patients;
     }
 }
 

@@ -4,16 +4,32 @@ import nutritionistService from "../../../services/nutritionist.service";
 import usersServices from "../../../services/users.services";
 export class Controller {
 
-    async patients(req: Request, res: Response, next: NextFunction) {
-        try {
-            const username = req.query.username;
-            const page = req.query.page;
-            const size = req.query.size;
-            const list = await nutritionistService.getMyPatients(username.toString(), Number(page.toString()), Number(size.toString()));
-            return res.status(200).json(list);
-        } catch (error) {
-            next(error);
+    async patientsFilter(req: Request, res: Response, next: NextFunction) {
+        let docs: any[];
+        let pagination: { [k: string]: any } = {};
+        let usersQ: { [k: string]: any } = {};
+        let query: { [k: string]: any } = {};
+        if (req.query.pagination == 'true') {
+            pagination.sort = {};
+            pagination.skip = Number(req.query.size) * (Number(req.query.page) - 1);
+            pagination.limit = Number(req.query.size);
         }
+        if (req.query.hasParams == 'true') {
+            if (req.query.gender) {
+                usersQ.gender = req.query.gender;
+            }
+            if (req.query.username) {
+                usersQ.user_name = req.query.username;
+            }
+            if (req.query.phone) {
+                usersQ.phone = req.query.phone;
+            }
+            if (req.query.email) {
+                usersQ.email = req.query.email
+            }
+        }
+        docs = await nutritionistService.filter(req.params.username, pagination, usersQ);
+        return res.status(200).json(docs);
     }
 
     async profile(req: Request, res: Response, next: NextFunction) {

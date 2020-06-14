@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction, query } from "express";
 import PatientService from "../../../services/patients.service";
 import usersServices from "../../../services/users.services";
 import GMailService from "../../../services/mail.service";
@@ -16,6 +16,7 @@ export class PatientController {
             next(err);
         }
     }
+
 }
 
 export default new PatientController();

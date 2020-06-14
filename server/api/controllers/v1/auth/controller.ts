@@ -63,12 +63,10 @@ export class Controller {
             let username = req.params.username;
             let user = await usersServices.getByUsername(username);
             GMailService.sendMail(user.email, 'Verificar cuenta de nutriologo', `<strong>Codigo de verificacion:</strong>${user.confirmation_code}`)
-            return res.status(200).json({message:"Hemos reenviado el codigo de verificacion"});
-        }catch(err){
+            return res.status(200).json({ message: "Hemos reenviado el codigo de verificacion" });
+        } catch (err) {
             next(err);
         }
-        
-
     }
 
     async login(req: Request, res: Response, next: NextFunction) {
