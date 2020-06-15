@@ -13,7 +13,7 @@ class Controller {
 
     async filterByRange(req: Request, res: Response, next: NextFunction) {
         try {
-            const docs = await scheduleServices.getConsultationsByRange(req.body);
+            const docs = await scheduleServices.getConsultationsByRange(req.query);
             return res.json(docs).status(200);
         } catch (err) {
             next(err);

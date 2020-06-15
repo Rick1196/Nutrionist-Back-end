@@ -21,10 +21,11 @@ class ScheduleService {
     async getConsultationsByRange(data: any): Promise<ISchedule[]> {
         let start = startOfDay(new Date(data.start));
         let end = endOfDay(new Date(data.end));
-        console.log(start, end);
+        let atended = data.atended;
+        console.log('data', data);
 
         let nutritionist = (await usersServices.getByUsername(data.nutritionist))._id;
-        const docs = await Schedule.find({ nutritionist_id: nutritionist, start: { $gte: start }, end: { $lte: end } }).populate({ path: 'patient_id', populate: { path: 'user' } })
+        const docs = await Schedule.find({ nutritionist_id: nutritionist, atended: atended, start: { $gte: start }, end: { $lte: end } }).populate({ path: 'patient_id', populate: { path: 'user' } })
         return docs;
     }
 }

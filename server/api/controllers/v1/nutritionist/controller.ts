@@ -4,32 +4,55 @@ import nutritionistService from "../../../services/nutritionist.service";
 import usersServices from "../../../services/users.services";
 export class Controller {
 
+    async getStatistics(req: Request, res: Response, next: NextFunction) {
+        try {
+            const females = (await nutritionistService.filter(req.params.username, {}, { gender: 'Mujer' })).length;
+            const males = (await nutritionistService.filter(req.params.username, {}, { gender: 'Hombre' })).length;
+            const others = (await nutritionistService.filter(req.params.username, {}, { gender: 'Otros' })).length;
+            const total = (await nutritionistService.filter(req.params.username, {}, {})).length;
+            return res.status(200).json({
+                females: females,
+                males: males,
+                others: others,
+                total: total
+            });
+        } catch (error) {
+            next(error)
+        }
+
+    }
+
     async patientsFilter(req: Request, res: Response, next: NextFunction) {
-        let docs: any[];
-        let pagination: { [k: string]: any } = {};
-        let usersQ: { [k: string]: any } = {};
-        let query: { [k: string]: any } = {};
-        if (req.query.pagination == 'true') {
-            pagination.sort = {};
-            pagination.skip = Number(req.query.size) * (Number(req.query.page) - 1);
-            pagination.limit = Number(req.query.size);
+        try {
+            let docs: any[];
+            let pagination: { [k: string]: any } = {};
+            let usersQ: { [k: string]: any } = {};
+            let query: { [k: string]: any } = {};
+            if (req.query.pagination == 'true') {
+                pagination.sort = {};
+                pagination.skip = Number(req.query.size) * (Number(req.query.page) - 1);
+                pagination.limit = Number(req.query.size);
+            }
+            if (req.query.hasParams == 'true') {
+                if (req.query.gender) {
+                    usersQ.gender = req.query.gender;
+                }
+                if (req.query.username) {
+                    usersQ.user_name = req.query.username;
+                }
+                if (req.query.phone) {
+                    usersQ.phone = req.query.phone;
+                }
+                if (req.query.email) {
+                    usersQ.email = req.query.email
+                }
+            }
+            docs = await nutritionistService.filter(req.params.username, pagination, usersQ);
+            return res.status(200).json(docs);
+        } catch (error) {
+            next(error);
         }
-        if (req.query.hasParams == 'true') {
-            if (req.query.gender) {
-                usersQ.gender = req.query.gender;
-            }
-            if (req.query.username) {
-                usersQ.user_name = req.query.username;
-            }
-            if (req.query.phone) {
-                usersQ.phone = req.query.phone;
-            }
-            if (req.query.email) {
-                usersQ.email = req.query.email
-            }
-        }
-        docs = await nutritionistService.filter(req.params.username, pagination, usersQ);
-        return res.status(200).json(docs);
+
     }
 
     async profile(req: Request, res: Response, next: NextFunction) {
