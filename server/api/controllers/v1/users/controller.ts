@@ -77,7 +77,7 @@ export class Controller {
             let username = firstname[0] + s + temp;
             let users = await usersServices.getUsersByName(username);
             if (users.length > 0) {
-                username += length;
+                username += users.length;
             }
             return res.json({ user_name: username }).status(200);
         } catch (err) {

@@ -3,7 +3,8 @@ import l from "../../common/logger";
 import { Nutritionist, INutritionist } from "../models/nutrionists";
 import { User } from "../models/users";
 import usersServices from "./users.services";
-import { IPatient } from "../models/patients";
+import { IPatient, Patient } from "../models/patients";
+import { roundToNearestMinutesWithOptions } from "date-fns/fp";
 
 export class NutrionistService {
     async create(data): Promise<INutritionist> {
@@ -26,7 +27,7 @@ export class NutrionistService {
         l.info(`Adding patient with id ${_id} to nutritionise ${nutritionist}`)
         const user = (await usersServices.getByUsername(nutritionist))._id;
         let nut = await this.getByUserId(user);
-        nut.patients.push(_id);
+        nut.patients.unshift(_id);
         const doc = await this.udpdate(nut);
         return doc;
     }
@@ -38,12 +39,32 @@ export class NutrionistService {
         return doc;
     }
 
-    async filter(username: string, pagination: any, usersQ: any): Promise<any[]> {
+    async filter(username: string, pagination: any, usersQ: any): Promise<any> {
         const user = (await usersServices.getByUsername(username))._id;
+        const total = (await (await this.getByUserId(user)).patients.length);
         let users = (await User.find(usersQ));
         users = users.map(x => x._id);
         const list = await Nutritionist.findOne({ user: user }, "patients").populate({ path: 'patients', options: pagination, match: { user: { $in: users } }, populate: { path: 'user' } });
-        return list.patients;
+        return { patients: list.patients, total: total };
+    }
+
+    async getByFullName(firstname: string, lastname: string, username: string): Promise<any[]> {
+        const user = (await usersServices.getByUsername(username))._id;
+        let patients: any = (await (await Nutritionist.findOne({ user: user }, "patients").populate({ path: "patients" })).patients);
+        patients = patients.map(x => x.user);
+        let query: { [k: string]: any } = {};
+        query._id = { $in: patients };
+        if (firstname != '') {
+            query.first_name = new RegExp(`${firstname.toUpperCase()}`)
+        }
+        if (lastname != '') {
+            query.last_name = new RegExp(`${lastname.toUpperCase()}`)
+        }
+        console.log(query);
+
+        const users = await User.find(query);
+
+        return users;
     }
 }
 

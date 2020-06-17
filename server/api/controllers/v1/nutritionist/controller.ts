@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction, response } from "express";
 import l from "../../../../common/logger";
 import nutritionistService from "../../../services/nutritionist.service";
 import usersServices from "../../../services/users.services";
@@ -6,10 +6,10 @@ export class Controller {
 
     async getStatistics(req: Request, res: Response, next: NextFunction) {
         try {
-            const females = (await nutritionistService.filter(req.params.username, {}, { gender: 'Mujer' })).length;
-            const males = (await nutritionistService.filter(req.params.username, {}, { gender: 'Hombre' })).length;
-            const others = (await nutritionistService.filter(req.params.username, {}, { gender: 'Otros' })).length;
-            const total = (await nutritionistService.filter(req.params.username, {}, {})).length;
+            const females = (await nutritionistService.filter(req.params.username, {}, { gender: 'Mujer' })).patients.length;
+            const males = (await nutritionistService.filter(req.params.username, {}, { gender: 'Hombre' })).patients.length;
+            const others = (await nutritionistService.filter(req.params.username, {}, { gender: 'Otros' })).patients.length;
+            const total = (await nutritionistService.filter(req.params.username, {}, {})).patients.length;
             return res.status(200).json({
                 females: females,
                 males: males,
@@ -20,6 +20,15 @@ export class Controller {
             next(error)
         }
 
+    }
+
+    async getByFullName(req: Request, res: Response, next: NextFunction) {
+        try {
+            const docs = await nutritionistService.getByFullName(String(req.query.firstname), String(req.query.lastname), String(req.query.username));
+            return res.status(200).json(docs);
+        } catch (error) {
+            next(error);
+        }
     }
 
     async patientsFilter(req: Request, res: Response, next: NextFunction) {

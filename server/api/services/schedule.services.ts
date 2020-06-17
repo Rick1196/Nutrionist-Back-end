@@ -4,11 +4,15 @@ import usersServices from './users.services';
 import l from '../../common/logger';
 import startOfDay from 'date-fns/startOfDay'
 import endOfDay from 'date-fns/endOfDay'
+import { Patient } from '../models/patients';
+import { IUserModel } from '../models/users';
 
 class ScheduleService {
     async createConsultation(data: any): Promise<ISchedule> {
         let nutritionist = await usersServices.getByUsername(data.nutritionist);
         delete data.nutritionist;
+        let patient: any = (await Patient.findOne({ _id: data.patient_id }).populate({ path: 'user' }).select('user -_id').lean()).user;
+        data.title = `Consulta con ${patient.first_name} ${patient.last_name}`;
         let input = data;
         input.nutritionist_id = nutritionist._id;
         data.start = new Date(data.start);
