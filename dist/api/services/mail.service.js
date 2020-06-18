@@ -6,13 +6,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const nodemailer = __importStar(require("nodemailer"));
-const exception_1 = __importDefault(require("../exceptions/exception"));
-const logger_1 = __importDefault(require("../../common/logger"));
 class GMailService {
     constructor() {
         try {
@@ -31,18 +26,12 @@ class GMailService {
         }
     }
     sendMail(to, subject, content) {
-        let options = {
-            from: 'ricardompp11@gmail.com',
-            to: to,
-            subject: subject,
-            html: content
-        };
-        this._transporter.sendMail(options, (error, info) => {
-            if (error) {
-                throw new exception_1.default(error);
-            }
-            logger_1.default.info(`Message Sent ${info.response}`);
-        });
+        const client = require('twilio')('ACb669a8681d8a3e728562a5cd09603973', 'f3beae52c1c140ba4531d5662c2dc29c');
+        client.messages.create({
+            from: '+12058756832',
+            to: `+52${to}`,
+            body: content
+        }).then((messsage) => console.log(messsage.sid));
     }
 }
 exports.default = new GMailService();

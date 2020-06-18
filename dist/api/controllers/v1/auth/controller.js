@@ -44,7 +44,7 @@ class Controller {
                     image: Buffer.from(image, 'base64'), user: data._id, data_type: data_type
                 };
                 nutritionist_service_1.default.create(nutritionist).then(nut => {
-                    mail_service_1.default.sendMail(data.email, 'Verificar cuenta de nutriologo', `<strong>Codigo de verificacion:</strong>${data.confirmation_code}`);
+                    mail_service_1.default.sendMail(data.phone.toString(), 'Verificar cuenta de nutriologo', `Codigo de verificacion:${data.confirmation_code}`);
                     return res.status(200).json(nut);
                 }).catch(error => {
                     return res.status(500).json(error);
@@ -56,8 +56,8 @@ class Controller {
     }
     confirmUser(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            let { user_name, confirmation_code } = req.body;
-            let user = yield users_services_1.default.getByUsername(user_name);
+            let { username, confirmation_code } = req.body;
+            let user = yield users_services_1.default.getByUsername(username);
             logger_1.default.info(user.confirmation_code + ' ' + confirmation_code);
             if (user.confirmation_code == confirmation_code) {
                 user.confirmed = true;
@@ -79,7 +79,7 @@ class Controller {
             try {
                 let username = req.params.username;
                 let user = yield users_services_1.default.getByUsername(username);
-                mail_service_1.default.sendMail(user.email, 'Verificar cuenta de nutriologo', `<strong>Codigo de verificacion:</strong>${user.confirmation_code}`);
+                mail_service_1.default.sendMail(user.phone.toString(), 'Verificar cuenta de nutriologo', `Codigo de verificacion:${user.confirmation_code}`);
                 return res.status(200).json({ message: "Hemos reenviado el codigo de verificacion" });
             }
             catch (err) {

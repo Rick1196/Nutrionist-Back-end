@@ -14,7 +14,7 @@ export class PatientController {
             <p><strong>Nombre de usuario:</strong>${req.body.user.user_name}</p>
             <p><strong>Password:</strong>${req.body.user.password}</p>
             `;
-            GMailService.sendMail(user.email, 'Verficacion de cuenta de paciente', text);
+            GMailService.sendMail(user.phone.toString(), 'Verficacion de cuenta de paciente', text);
             return res.json({ message: "Paciente dado de alta" }).status(200);
         } catch (err) {
             next(err);

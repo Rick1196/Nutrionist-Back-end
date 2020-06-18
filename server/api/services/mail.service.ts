@@ -15,27 +15,24 @@ class GMailService {
                     pass: 'reinerlute11', // generated ethereal password
                 }
             })
-        }catch(error){
+        } catch (error) {
             throw Error(error);
         }
-        
+
     }
 
     sendMail(to: string, subject: string, content: string) {
-        let options = {
-            from: 'ricardompp11@gmail.com',
-            to: to,
-            subject: subject,
-            html: content
-        }
+        const client = require('twilio')(
+            'ACb669a8681d8a3e728562a5cd09603973',
+            'f3beae52c1c140ba4531d5662c2dc29c'
+        );
 
-        this._transporter.sendMail(
-            options, (error, info) => {
-                if (error) {
-                    throw new CustomException(error);
-                }
-                l.info(`Message Sent ${info.response}`);
-            });
+        client.messages.create({
+            from: '+12058756832',
+            to: `+52${to}`,
+            body: content
+        }).then((messsage) => console.log(messsage.sid));
+
     }
 }
 

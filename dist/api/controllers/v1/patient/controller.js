@@ -27,7 +27,7 @@ class PatientController {
             <p><strong>Nombre de usuario:</strong>${req.body.user.user_name}</p>
             <p><strong>Password:</strong>${req.body.user.password}</p>
             `;
-                mail_service_1.default.sendMail(user.email, 'Verficacion de cuenta de paciente', text);
+                mail_service_1.default.sendMail(user.phone.toString(), 'Verficacion de cuenta de paciente', text);
                 return res.json({ message: "Paciente dado de alta" }).status(200);
             }
             catch (err) {

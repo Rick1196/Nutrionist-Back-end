@@ -15,7 +15,7 @@ const connectionString = process.env.NODE_ENV === "production"
             "mongodb+srv://dbAdmin:PEPEPECASPICAPAPAS@cluster0-zzuli.gcp.mongodb.net/test?retryWrites=true&w=majority"
         : process.env.MONGODB_URI_DEV ||
             "mongodb+srv://dbAdmin:PEPEPECASPICAPAPAS@cluster0-zzuli.gcp.mongodb.net/test?retryWrites=true&w=majority";
-const db = new database_1.default(connectionString);
+const db = new database_1.default("mongodb+srv://dbAdmin:PEPEPECASPICAPAPAS@cluster0-zzuli.gcp.mongodb.net/test?retryWrites=true&w=majority");
 exports.default = new server_1.default()
     .database(db)
     .router(routes_1.default)

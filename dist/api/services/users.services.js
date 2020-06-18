@@ -74,17 +74,18 @@ class UsersService {
     validateUser(data) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                console.log(data);
                 let errors = { user_name: '', phone: '', length: 0 };
-                let byUser = yield users_1.User.findOne({ user_name: data.user_name });
+                let byUser = yield users_1.User.findOne({ user_name: data.username });
                 if (byUser != null) {
                     errors.user_name = 'User already taked';
                     errors.length = errors.length + Number.parseInt('1');
                 }
-                let byPhone = yield users_1.User.findOne({ phone: data.phone });
-                if (byPhone != null) {
-                    errors.phone = 'Phone already registered';
-                    errors.length = errors.length + Number.parseInt('1');
-                }
+                // let byPhone = await User.findOne({ phone: data.phone });
+                // if (byPhone != null) {
+                //     errors.phone = 'Phone already registered';
+                //     errors.length = errors.length + Number.parseInt('1');
+                // }
                 return errors;
             }
             catch (error) {
