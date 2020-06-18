@@ -45,6 +45,9 @@ class UsersService {
         return __awaiter(this, void 0, void 0, function* () {
             logger_1.default.info(`fetch user with username ${username}`);
             const user = (yield users_1.User.findOne({ user_name: username }).lean());
+            if (!user) {
+                throw new exception_1.default({ username: "Usuario no encontrado" });
+            }
             return user;
         });
     }
@@ -102,7 +105,9 @@ class UsersService {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 yield (users_1.User.findOneAndUpdate(profile.user._id, profile.user));
-                yield (nutrionists_1.Nutritionist.findOneAndUpdate(profile.nutritionist._id, profile.nutritionist));
+                delete profile.user;
+                profile.image = Buffer.from(profile.image, 'base64');
+                yield (nutrionists_1.Nutritionist.findOneAndUpdate(profile._id, profile));
             }
             catch (error) {
                 throw Error(error);

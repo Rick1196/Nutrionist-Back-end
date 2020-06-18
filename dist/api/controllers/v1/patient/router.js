@@ -5,10 +5,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const controller_1 = __importDefault(require("./controller"));
+const checkJwt_1 = require("../../../middlewares/checkJwt");
 exports.default = express_1.default
     .Router()
-    .post("/login", controller_1.default.login)
-    .post("/register-nutritionist", controller_1.default.registerNutritionist)
-    .get("/resend-code/:username", controller_1.default.sendVerficationCode)
-    .post("/validate-user", controller_1.default.confirmUser);
+    .post("/update-patient", [checkJwt_1.checkJwt], controller_1.default.updatePatient)
+    .post("/register-patient", [checkJwt_1.checkJwt], controller_1.default.registerPatient);
 //# sourceMappingURL=router.js.map

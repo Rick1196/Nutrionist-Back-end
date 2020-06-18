@@ -18,7 +18,7 @@ class Controller {
     getCountries(req, res, nex) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                logger_1.default.info("retriving stuff");
+                logger_1.default.info("retriving countries");
                 let countires = yield common_services_1.default.getCoutnries();
                 return res.status(200).json(countires);
             }

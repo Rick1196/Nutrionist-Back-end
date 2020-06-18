@@ -15,14 +15,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const users_services_1 = __importDefault(require("../../../services/users.services"));
 const users_services_2 = __importDefault(require("../../../services/users.services"));
 const logger_1 = __importDefault(require("../../../../common/logger"));
-const nutritionist_service_1 = __importDefault(require("../../../services/nutritionist.service"));
-const mail_service_1 = __importDefault(require("../../../services/mail.service"));
 class Controller {
     getById(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const doc = yield users_services_1.default.getById(Number.parseInt(req.params.id));
-                logger_1.default.info(`Controller recive ${doc.citie}`);
+                logger_1.default.info(`Controller recive ${doc.user_name}`);
                 if (doc) {
                     return res.status(200).json(doc);
                 }
@@ -45,45 +43,12 @@ class Controller {
             }
         });
     }
-    getNutritionistProfile(req, res, next) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                logger_1.default.info(`Contrller retriving nutritionist profile ${req.params.user_name}`);
-                const user = yield users_services_2.default.getByUsername(req.params.user_name);
-                if (user) {
-                    const nutritionist = yield nutritionist_service_1.default.getByUserId(user._id);
-                    if (nutritionist) {
-                        return res.status(200).json({ user: user, nutritionist: nutritionist });
-                    }
-                    const errors = [{ message: "Nutritionist not found" }];
-                    return res.status(400).json(errors);
-                }
-                const errors = [{ message: "User not found" }];
-                return res.status(404).json({ errors });
-            }
-            catch (error) {
-                return next(error);
-            }
-        });
-    }
     updateNutritionistProfile(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const profile = req.body;
                 yield users_services_2.default.updateNutritionistProfile(profile);
                 return res.json({ message: "Perfil actualizado corrrectamente" }).status(200);
-            }
-            catch (error) {
-                return next(error);
-            }
-        });
-    }
-    registerPatient(req, res, next) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                let patient = yield users_services_2.default.registerPatient(req.body);
-                mail_service_1.default.sendMail(patient.email, 'Verificar cuenta de paciente', `<strong>Codigo de verificacion:</strong>${patient.confirmation_code}`);
-                return res.json({ message: "Paciente dado de alta" }).status(200);
             }
             catch (error) {
                 return next(error);
@@ -135,7 +100,7 @@ class Controller {
                 let username = firstname[0] + s + temp;
                 let users = yield users_services_2.default.getUsersByName(username);
                 if (users.length > 0) {
-                    username += length;
+                    username += users.length;
                 }
                 return res.json({ user_name: username }).status(200);
             }

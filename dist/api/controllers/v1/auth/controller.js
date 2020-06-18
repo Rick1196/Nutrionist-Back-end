@@ -21,6 +21,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const users_services_1 = __importDefault(require("../../../services/users.services"));
 const nutritionist_service_1 = __importDefault(require("../../../services/nutritionist.service"));
+const mail_service_1 = __importDefault(require("../../../services/mail.service"));
 const logger_1 = __importDefault(require("../../../../common/logger"));
 const jwt = __importStar(require("jsonwebtoken"));
 const config_1 = __importDefault(require("../../../../config/config"));
@@ -43,6 +44,7 @@ class Controller {
                     image: Buffer.from(image, 'base64'), user: data._id, data_type: data_type
                 };
                 nutritionist_service_1.default.create(nutritionist).then(nut => {
+                    mail_service_1.default.sendMail(data.email, 'Verificar cuenta de nutriologo', `<strong>Codigo de verificacion:</strong>${data.confirmation_code}`);
                     return res.status(200).json(nut);
                 }).catch(error => {
                     return res.status(500).json(error);
@@ -68,38 +70,48 @@ class Controller {
                 });
             }
             else {
-                logger_1.default.info(user.confirmation_code);
-                users_services_1.default.udpdate(user).then(done => {
-                    res.status(400).json({ message: "Codigo erroneo", user: done });
-                }).catch(error => {
-                    res.status(500).json(error);
-                });
+                res.status(400).json({ message: "Codigo erroneo" });
+            }
+        });
+    }
+    sendVerficationCode(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                let username = req.params.username;
+                let user = yield users_services_1.default.getByUsername(username);
+                mail_service_1.default.sendMail(user.email, 'Verificar cuenta de nutriologo', `<strong>Codigo de verificacion:</strong>${user.confirmation_code}`);
+                return res.status(200).json({ message: "Hemos reenviado el codigo de verificacion" });
+            }
+            catch (err) {
+                next(err);
             }
         });
     }
     login(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            let { user_name, password } = req.body;
-            if (!(user_name && password)) {
-                return res.status(400).json({ error: 'Please provide user and password' });
+            try {
+                let { user_name, password } = req.body;
+                if (!(user_name && password)) {
+                    return res.status(400).json({ error: 'Please provide user and password' });
+                }
+                const user = yield users_services_1.default.getByUsername(user_name);
+                if (user.confirmed == false) {
+                    return res.status(400).json({ error: 'Debe verificar su usuario' });
+                }
+                if (!users_services_1.default.checkIfUnencryptedPasswordIsValid(password, user.password)) {
+                    return res.status(401).json({ error: 'Password incorrecta' });
+                }
+                const token = jwt.sign({ userId: user.user_id, username: user.user_name, userRole: user.role }, config_1.default.jwtSecret, { expiresIn: "1y" });
+                res.status(200).json({
+                    token: token,
+                    expiresIn: '18000',
+                    user: user_name,
+                    email: user.email,
+                });
             }
-            const user = yield users_services_1.default.getByUsername(user_name);
-            if (!user) {
-                return res.status(401).json({ error: 'Usuario no encontrado' });
+            catch (err) {
+                next(err);
             }
-            if (user.confirmed == false) {
-                return res.status(400).json({ error: 'Debe verificar su usuario' });
-            }
-            if (!users_services_1.default.checkIfUnencryptedPasswordIsValid(password, user.password)) {
-                return res.status(401).json({ error: 'Password incorrecta' });
-            }
-            const token = jwt.sign({ userId: user.user_id, username: user.user_name, userRole: user.role }, config_1.default.jwtSecret, { expiresIn: "1y" });
-            res.status(200).json({
-                token: token,
-                expiresIn: '18000',
-                user: user_name,
-                email: user.email,
-            });
         });
     }
 }

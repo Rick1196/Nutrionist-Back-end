@@ -18,17 +18,28 @@ class Controller {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 yield schedule_services_1.default.createConsultation(req.body);
-                return res.status(200).json({ message: 'Consuta agendada' });
+                return res.status(200).json({ message: 'Consulta agendada' });
             }
             catch (err) {
                 next(err);
             }
         });
     }
+    updateConsultation(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                schedule_services_1.default.update(req.body);
+                return res.status(200).json({ message: 'Consulta actualizada' });
+            }
+            catch (error) {
+                next(error);
+            }
+        });
+    }
     filterByRange(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const docs = yield schedule_services_1.default.getConsultationsByRange(req.body);
+                const docs = yield schedule_services_1.default.getConsultationsByRange(req.query);
                 return res.json(docs).status(200);
             }
             catch (err) {

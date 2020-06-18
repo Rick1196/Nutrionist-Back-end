@@ -30,5 +30,5 @@ const schema = new mongoose_1.default.Schema({
     collection: "users"
 });
 schema.plugin(AutoIncrement, { inc_field: "user_id" });
-exports.User = mongoose_1.default.model("Nutrionist", schema);
+exports.User = mongoose_1.default.model("users", schema);
 //# sourceMappingURL=users.js.map

@@ -8,7 +8,8 @@ const controller_1 = __importDefault(require("./controller"));
 const checkJwt_1 = require("../../../middlewares/checkJwt");
 exports.default = express_1.default
     .Router()
-    .post("/new-date", [checkJwt_1.checkJwt], controller_1.default.createConsultation)
-    .post("/put-date", [checkJwt_1.checkJwt], controller_1.default.updateConsultation)
-    .get("/filter-by-range", [checkJwt_1.checkJwt], controller_1.default.filterByRange);
+    .get("/get-nutritionist-profile/:user_name", [checkJwt_1.checkJwt], controller_1.default.profile)
+    .get("/get-statistics/:username", [checkJwt_1.checkJwt], controller_1.default.getStatistics)
+    .get("/by-fullname", [checkJwt_1.checkJwt], controller_1.default.getByFullName)
+    .get("/patients/:username", [checkJwt_1.checkJwt], controller_1.default.patientsFilter);
 //# sourceMappingURL=router.js.map

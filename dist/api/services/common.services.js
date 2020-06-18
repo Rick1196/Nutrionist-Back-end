@@ -17,8 +17,8 @@ const countrie_1 = require("../models/countrie");
 class CommonService {
     getCoutnries() {
         return __awaiter(this, void 0, void 0, function* () {
-            logger_1.default.info(`retriving all countiries`);
-            const docs = (yield countrie_1.Countrie.find(null, "-_id -__v").lean());
+            logger_1.default.info(`retriving all countries`);
+            const docs = (yield countrie_1.Countrie.find(null, "-_id -__v"));
             return docs;
         });
     }
