@@ -13,7 +13,7 @@ const connectionString =
       : process.env.MONGODB_URI_DEV ||
       "mongodb+srv://dbAdmin:PEPEPECASPICAPAPAS@cluster0-zzuli.gcp.mongodb.net/test?retryWrites=true&w=majority";
 
-const db = new Database(connectionString);
+const db = new Database("mongodb+srv://dbAdmin:PEPEPECASPICAPAPAS@cluster0-zzuli.gcp.mongodb.net/test?retryWrites=true&w=majority");
 export default new Server()
   .database(db)
   .router(routes)
