@@ -11,6 +11,7 @@ export interface ISchedule extends mongoose.Document {
     color: any;
     allDay: boolean;
     atended: boolean;
+    duration: number;
 }
 
 var Schema = mongoose.Schema;
@@ -24,7 +25,8 @@ const schema = new Schema(
         end: { type: Date, required: true },
         color: { type: Object, required: true },
         allDay: { type: Boolean, required: true },
-        atended: { type: Boolean, required: true, default: false }
+        atended: { type: Boolean, required: true, default: false },
+        duration: { type: Number }
     },
     {
         collection: "schedule"

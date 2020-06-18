@@ -11,6 +11,15 @@ class Controller {
         }
     }
 
+    async updateConsultation(req: Request, res: Response, next: NextFunction) {
+        try {
+            scheduleServices.update(req.body);
+            return res.status(200).json({ message: 'Consulta actualizada' });
+        } catch (error) {
+            next(error);
+        }
+    }
+
     async filterByRange(req: Request, res: Response, next: NextFunction) {
         try {
             const docs = await scheduleServices.getConsultationsByRange(req.query);
