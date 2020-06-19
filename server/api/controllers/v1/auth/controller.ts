@@ -1,4 +1,3 @@
-import UsersService from "../../../services/users.services";
 import { Request, Response, NextFunction, request } from "express";
 import usersServices from "../../../services/users.services";
 import nutritionistService from "../../../services/nutritionist.service";
@@ -7,7 +6,6 @@ import GMailService from "../../../services/mail.service";
 import l from "../../../../common/logger";
 import * as jwt from "jsonwebtoken";
 import config from '../../../../config/config';
-import { IUserModel, User } from "../../../models/users";
 export class Controller {
     async registerNutritionist(req: Request, res: Response, next: NextFunction) {
         let {
@@ -62,6 +60,7 @@ export class Controller {
         try {
             let username = req.params.username;
             let user = await usersServices.getByUsername(username);
+            l.info(`Sending to ${user.phone}`)
             GMailService.sendMail(user.phone.toString(), 'Verificar cuenta de nutriologo', `Codigo de verificacion:${user.confirmation_code}`)
             return res.status(200).json({ message: "Hemos reenviado el codigo de verificacion" });
         } catch (err) {
@@ -95,6 +94,7 @@ export class Controller {
                 expiresIn: '18000',
                 user: user_name,
                 email: user.email,
+                role: user.role
             });
         } catch (err) {
             next(err);

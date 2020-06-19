@@ -6,8 +6,12 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const nodemailer = __importStar(require("nodemailer"));
+const logger_1 = __importDefault(require("../../common/logger"));
 class GMailService {
     constructor() {
         try {
@@ -31,7 +35,10 @@ class GMailService {
             from: '+12058756832',
             to: `+52${to}`,
             body: content
-        }).then((messsage) => console.log(messsage.sid));
+        }).then((messsage) => {
+            logger_1.default.info(`Sended to ${to}`);
+            console.log(messsage.sid);
+        });
     }
 }
 exports.default = new GMailService();

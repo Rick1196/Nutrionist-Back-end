@@ -1,9 +1,10 @@
 import { Request, Response, NextFunction, query } from "express";
-import PatientService from "../../../services/patients.service";
 import usersServices from "../../../services/users.services";
 import GMailService from "../../../services/mail.service";
 import patientsService from "../../../services/patients.service";
 import nutritionistService from "../../../services/nutritionist.service";
+import l from "../../../../common/logger";
+
 export class PatientController {
     async registerPatient(req: Request, res: Response, next: NextFunction) {
         try {
@@ -25,6 +26,17 @@ export class PatientController {
         try {
             await patientsService.update(req.body);
             res.status(200).json({ message: 'Paciente actualizado exitosamente' });
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async myConsultations(req: Request, res: Response, next: NextFunction) {
+        try {
+            l.info(`Fetch schedule from patient ${req.params.username}`)
+            const user = (await patientsService.byUsername(req.params.username))._id;
+            const docs = await patientsService.getConsultations(user, req.query)
+            res.status(200).json(docs);
         } catch (error) {
             next(error);
         }

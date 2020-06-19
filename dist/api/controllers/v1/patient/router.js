@@ -9,5 +9,6 @@ const checkJwt_1 = require("../../../middlewares/checkJwt");
 exports.default = express_1.default
     .Router()
     .post("/update-patient", [checkJwt_1.checkJwt], controller_1.default.updatePatient)
+    .get("/consultations/:username", [checkJwt_1.checkJwt], controller_1.default.myConsultations)
     .post("/register-patient", [checkJwt_1.checkJwt], controller_1.default.registerPatient);
 //# sourceMappingURL=router.js.map

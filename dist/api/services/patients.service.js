@@ -15,6 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const logger_1 = __importDefault(require("../../common/logger"));
 const users_1 = require("../models/users");
 const patients_1 = require("../models/patients");
+const exception_1 = __importDefault(require("../exceptions/exception"));
+const schedule_1 = require("../models/schedule");
+const date_fns_1 = require("date-fns");
 class PatientService {
     create(user, patient) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -41,6 +44,25 @@ class PatientService {
             delete patient._id;
             yield users_1.User.updateOne({ _id: userId }, { $set: user }, { multi: true }).exec();
             yield patients_1.Patient.updateOne({ _id: id }, { $set: patient }, { multi: true }).exec();
+        });
+    }
+    byUsername(username) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const user = yield users_1.User.findOne({ user_name: username });
+            if (!user) {
+                throw new exception_1.default({ message: 'Usuario no encontrado' });
+            }
+            return user;
+        });
+    }
+    getConsultations(user, data) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let start = date_fns_1.startOfDay(new Date(data.start));
+            let end = date_fns_1.endOfDay(new Date(data.end));
+            let atended = data.atended;
+            const patient = (yield patients_1.Patient.findOne({ user: user }))._id;
+            const docs = yield schedule_1.Schedule.find({ patient_id: patient, atended: atended, start: { $gte: start }, end: { $lte: end } }).populate({ path: 'patient_id', populate: { path: 'user' } }).populate({ path: 'nutritionist_id', populate: { path: 'user' } });
+            return docs;
         });
     }
 }

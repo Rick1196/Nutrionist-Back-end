@@ -16,6 +16,7 @@ const users_services_1 = __importDefault(require("../../../services/users.servic
 const mail_service_1 = __importDefault(require("../../../services/mail.service"));
 const patients_service_1 = __importDefault(require("../../../services/patients.service"));
 const nutritionist_service_1 = __importDefault(require("../../../services/nutritionist.service"));
+const logger_1 = __importDefault(require("../../../../common/logger"));
 class PatientController {
     registerPatient(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -40,6 +41,19 @@ class PatientController {
             try {
                 yield patients_service_1.default.update(req.body);
                 res.status(200).json({ message: 'Paciente actualizado exitosamente' });
+            }
+            catch (error) {
+                next(error);
+            }
+        });
+    }
+    myConsultations(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                logger_1.default.info(`Fetch schedule from patient ${req.params.username}`);
+                const user = (yield patients_service_1.default.byUsername(req.params.username))._id;
+                const docs = yield patients_service_1.default.getConsultations(user, req.query);
+                res.status(200).json(docs);
             }
             catch (error) {
                 next(error);
