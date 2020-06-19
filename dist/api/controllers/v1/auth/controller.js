@@ -88,6 +88,34 @@ class Controller {
             }
         });
     }
+    requestResetPassword(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                let user = req.params.username;
+                const doc = yield users_services_1.default.updateCode(user);
+                console.log(doc);
+                mail_service_1.default.sendMail(doc.phone.toString(), 'Reestablecer password', `Codigo de seguridad: ${doc.confirmation_code}`);
+                return res.status(200).json({ message: 'Hemos enviado un codigo a su telefono registrado  para cambiar su Password' });
+            }
+            catch (error) {
+                next(error);
+            }
+        });
+    }
+    resetPassowrd(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                let user = req.params.username;
+                let password = req.params.password;
+                let code = req.params.code;
+                yield users_services_1.default.changePassword(user, password, code);
+                return res.status(200).json({ message: 'Su password ha sido cambiado' });
+            }
+            catch (error) {
+                next(error);
+            }
+        });
+    }
     login(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {

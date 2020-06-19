@@ -10,5 +10,7 @@ exports.default = express_1.default
     .post("/login", controller_1.default.login)
     .post("/register-nutritionist", controller_1.default.registerNutritionist)
     .get("/resend-code/:username", controller_1.default.sendVerficationCode)
+    .get("/request-change/:username", controller_1.default.requestResetPassword)
+    .get("/change-password/:username/:password/:code", controller_1.default.resetPassowrd)
     .post("/validate-user", controller_1.default.confirmUser);
 //# sourceMappingURL=router.js.map

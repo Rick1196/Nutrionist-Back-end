@@ -130,6 +130,38 @@ class UsersService {
             }
         });
     }
+    updateCode(username) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let user = yield users_1.User.findOne({ user_name: username });
+            if (!user) {
+                throw new exception_1.default({ message: 'Usuario no encontrado' });
+            }
+            const _id = user._id;
+            delete user._id;
+            user.confirmation_code = this.generateCode();
+            yield users_1.User.updateOne({ _id: _id }, { $set: user }, { multi: true });
+            const updated = yield users_1.User.findOne({ _id: _id });
+            return updated;
+        });
+    }
+    changePassword(username, password, code) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let user = yield users_1.User.findOne({ user_name: username });
+            if (!user) {
+                throw new exception_1.default({ message: 'Usuario no encontrado' });
+            }
+            if (user.confirmation_code === code) {
+                const _id = user._id;
+                delete user._id;
+                user.password = this.hashPassword(password);
+                const updated = yield users_1.User.updateOne({ _id: _id }, { $set: user }, { multi: true });
+                return updated;
+            }
+            else {
+                throw new exception_1.default({ message: 'Codigo invalido' });
+            }
+        });
+    }
     generateCode() {
         return Math.random().toString(36).toUpperCase().substring(2, 4).toUpperCase() + Math.random().toString(36).toUpperCase().substring(2, 4).toUpperCase();
     }

@@ -25,7 +25,7 @@ class GMailService {
 
         const client = require('twilio')(
             'ACb669a8681d8a3e728562a5cd09603973',
-            'f3beae52c1c140ba4531d5662c2dc29c'
+            '04cc9b3dd1afac140d54b365bbc9bf7f'
         );
 
         client.messages.create({
@@ -35,7 +35,10 @@ class GMailService {
         }).then((messsage) => {
             l.info(`Sended to ${to}`)
             console.log(messsage.sid)
-        });
+        }).catch(error => {
+            console.log(error);
+
+        })
 
     }
 }

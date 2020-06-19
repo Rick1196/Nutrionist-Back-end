@@ -110,6 +110,36 @@ export class UsersService {
         }
     }
 
+    async updateCode(username: string): Promise<IUserModel> {
+        let user = await User.findOne({ user_name: username });
+        if (!user) {
+            throw new CustomException({ message: 'Usuario no encontrado' });
+        }
+        const _id = user._id;
+        delete user._id;
+        user.confirmation_code = this.generateCode();
+        await User.updateOne({ _id: _id }, { $set: user }, { multi: true });
+        const updated = await User.findOne({ _id: _id });
+        return updated;
+    }
+
+    async changePassword(username: string, password: string, code: string) {
+        let user = await User.findOne({ user_name: username });
+        if (!user) {
+            throw new CustomException({ message: 'Usuario no encontrado' });
+        }
+        if (user.confirmation_code === code) {
+            const _id = user._id;
+            delete user._id;
+            user.password = this.hashPassword(password);
+            const updated = await User.updateOne({ _id: _id }, { $set: user }, { multi: true });
+            return updated;
+        } else {
+            throw new CustomException({ message: 'Codigo invalido' });
+        }
+    }
+
+
     public generateCode(): string {
         return Math.random().toString(36).toUpperCase().substring(2, 4).toUpperCase() + Math.random().toString(36).toUpperCase().substring(2, 4).toUpperCase();
     }

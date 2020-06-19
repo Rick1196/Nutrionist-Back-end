@@ -68,6 +68,32 @@ export class Controller {
         }
     }
 
+    async requestResetPassword(req: Request, res: Response, next: NextFunction) {
+        try {
+            let user = req.params.username;
+            const doc = await usersServices.updateCode(user);
+            console.log(doc);
+
+            GMailService.sendMail(doc.phone.toString(), 'Reestablecer password', `Codigo de seguridad: ${doc.confirmation_code}`);
+            return res.status(200).json({ message: 'Hemos enviado un codigo a su telefono registrado  para cambiar su Password' });
+
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async resetPassowrd(req: Request, res: Response, next: NextFunction) {
+        try {
+            let user = req.params.username;
+            let password = req.params.password;
+            let code = req.params.code;
+            await usersServices.changePassword(user, password, code);
+            return res.status(200).json({ message: 'Su password ha sido cambiado' });
+        } catch (error) {
+            next(error);
+        }
+    }
+
     async login(req: Request, res: Response, next: NextFunction) {
         try {
             let { user_name, password } = req.body;
